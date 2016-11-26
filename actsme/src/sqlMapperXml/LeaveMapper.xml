@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xiaojl.oa.dao.LeaveDao">
+	<resultMap id="persionTaskVOResultMap" type="org.xiaojl.oa.model.LeaveBillTaskVO" >
+		<id column="id" property="id" jdbcType="BIGINT"/>
+		<result column="leaveDays" property="leaveDays" jdbcType="TINYINT"/>
+		<result column="context" property="context" jdbcType="VARCHAR"/>
+		<result column="leaveTime" property="leaveTime" jdbcType="TIMESTAMP"/>
+		<result column="leavePeople" property="leavePeople" jdbcType="VARCHAR"/>
+		<result column="remark" property="remark" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="TINYINT"/>
+		<result column="processInstanceId" property="processInstanceId" jdbcType="VARCHAR"/>
+		<result column="taskId" property="taskId" jdbcType="VARCHAR"/>
+		<result column="executionId" property="executionId" jdbcType="VARCHAR"/>
+		<result column="taskPersion" property="taskPersion" jdbcType="VARCHAR"/>
+		<result column="taskCreateTime" property="taskCreateTime" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+   <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id,leaveDays,context,leaveTime,leavePeople,remark,status
+    </sql>
+
+    <select id="selectLeaveList" resultType="org.xiaojl.oa.model.LeaveBill">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from leaveBill
+    	order by ${sort} ${order}
+    </select>
+    
+    <select id="selectPersionTaskList" resultMap="persionTaskVOResultMap">
+    	select 
+    		lb.*,
+			art.ID_ taskId,
+			art.EXECUTION_ID_ executionId,
+			art.ASSIGNEE_ taskPersion,
+			art.CREATE_TIME_ taskCreateTime
+		FROM
+			leavebill lb
+		LEFT JOIN act_ru_task art ON lb.processInstanceId = art.PROC_INST_ID_
+		WHERE lb.processInstanceId IS NOT NULL
+		AND art.ASSIGNEE_ = #{assignee}
+		order by CREATE_TIME_ ${order}
+    </select>
+</mapper>

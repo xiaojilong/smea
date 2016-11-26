@@ -1,0 +1,345 @@
+
+spring MVC + mybatis + druid + easyui
+
+
+----------------【框架搭建】----------------------------------------------
+1、整合springMVC：
+	1.1、引入jar文件：
+		spring包：
+			spring-aop-4.3.2.RELEASE.jar
+			spring-aspects-4.3.2.RELEASE.jar
+			spring-beans-4.3.2.RELEASE.jar
+			spring-context-4.3.2.RELEASE.jar
+			spring-context-support-4.3.2.RELEASE.jar
+			spring-core-4.3.2.RELEASE.jar
+			spring-expression-4.3.2.RELEASE.jar
+			spring-jdbc-4.3.2.RELEASE.jar
+			spring-test-4.3.2.RELEASE.jar
+			spring-tx-4.3.2.RELEASE.jar
+			spring-web-4.3.2.RELEASE.jar
+			spring-webmvc-4.3.2.RELEASE.jar
+		aspectj包：
+			aspectjweaver-1.6.10.jar	
+		日志包：
+			commons-logging-1.2.jar	
+		Json包：
+			jackson-core-2.8.2.jar
+			jackson-databind-2.8.2.jar
+			jackson-annotations-2.8.0.jar
+	1.2、配置spring：
+		spring-mvc.xml
+		web.xml：
+			<!-- 继承主配置文件 -->
+		    <context-param>
+		        <param-name>contextConfigLocation</param-name>
+		        <param-value>classpath:spring-context.xml</param-value>
+		    </context-param>
+			<!--Spring上下文监听器-->
+		    <listener>
+		        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		    </listener>
+			<!-- springmvc 控制器 -->
+		    <servlet>
+		        <servlet-name>springmvc</servlet-name>
+		        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		        <init-param>
+		            <param-name>contextConfigLocation</param-name>
+		            <param-value>classpath:spring-mvc.xml</param-value>
+		        </init-param>
+		        <load-on-startup>1</load-on-startup>
+		    </servlet>
+		    <servlet-mapping>
+		        <servlet-name>springmvc</servlet-name>
+		        <url-pattern>*.do</url-pattern>
+		    </servlet-mapping>
+
+2、编写controller类：
+		2.1、通用的抽象类：BaseController.java   
+			initBinder：
+				自动转换日期类型的字段格式
+				防止XSS攻击 
+			通用工具：
+				响应结果
+		2.2、测试类：
+			TestController.java
+			
+3、整合mybatis+druid:
+	3.1、引入jar包：
+		druid包：
+			druid-1.0.26.jar
+		mybatis包：	
+			mybatis-3.4.1.jar
+			mybatis-plus-1.4.7.jar
+			mybatis-spring-1.3.0.jar	
+		数据库驱动包：
+			mysql-connector-java-5.1.39.jar	
+		日志包：
+			log4j-1.2.17.jar
+			
+			hamcrest-all-1.3RC0.jar	
+	3.2、配置：
+		mybatis.xml
+		spring-mybatis.xml	
+		log4j.properties
+		config.properties：
+			#--------- database -----------
+			db.master.url=jdbc:mysql://localhost:3306/shiro?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false
+			db.master.user=root
+			db.master.password=root
+		spring-context.xml:
+			<import resource="classpath:spring-mybatis.xml"/>	
+		web.xml:
+			<filter>
+		        <filter-name>DruidWebStatFilter</filter-name>
+		        <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+		        <init-param>
+		            <param-name>exclusions</param-name>
+		            <param-value>/static/*,*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+		        </init-param>
+		        <init-param>
+		            <param-name>sessionStatEnable</param-name>
+		            <param-value>false</param-value>
+		        </init-param>
+		    </filter>
+		    <filter-mapping>
+		        <filter-name>DruidWebStatFilter</filter-name>
+		        <url-pattern>/*</url-pattern>
+		    </filter-mapping>
+		    
+		    <!-- druid监控 -->
+		    <servlet>
+		        <servlet-name>DruidStatView</servlet-name>
+		        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+		        <init-param>
+		            <!-- 用户名 -->
+		            <param-name>loginUsername</param-name>
+		            <param-value>xiaojl</param-value>
+		        </init-param>
+		        <init-param>
+		            <!-- 密码 -->
+		            <param-name>loginPassword</param-name>
+		            <param-value>xiaojl</param-value>
+		        </init-param>
+		    </servlet>
+		    <servlet-mapping>
+		        <servlet-name>DruidStatView</servlet-name>
+		        <url-pattern>/druid/index.jsp</url-pattern>
+		    </servlet-mapping>
+		    
+4、编写Dao层：
+	4.1、所有的dao接口都继承 AutoMapper<T>:
+		单表 CURD （简单 + 批量）操作，自动完成。
+		分页插件，Count 查询 自动 或 自定义 SQL 查询。
+		Spring 根据不同环境加载不同配置支持。
+	4.2、所有的dao的mapper文件到放到	sqlMapperXml包中；
+	
+	4.3、测试
+	
+5、整合easyui:
+	5.1、引入包：
+		jquery-easyui-1.5
+	5.2、编写通用jsp：
+		common.jsp	
+----------------【功能模块】----------------------------------------------
+一、系统管理	
+	1、资源管理：
+		实现系统菜单和页面按钮权限资源的配置功能
+	2、角色管理：
+		实现系统角色的添加、修改、删除、查询和授权功能
+	3、用户管理：
+		实现系统用户的添加、修改、删除、查询和授权功能
+	4、部门管理：
+		实现系统部门的添加、修改、删除、查询功能	
+	
+		
+二、工作流开发：
+	1、
+		
+----------------【增强】----------------------------------------------		
+1、添加系统日志aop：
+	1.1、编写类：SysLogAspect.java
+	1.2、注册（注解方式）
+
+2、自定义jsp标签：FrameSecurityTag - jsp按钮权限控制
+	2.1、定义tlds文件：在Web-Inf创建标签库描述文件.tld(Tag Library Description)
+	2.2、创建自定义标签类：FrameSecurityTag.java类
+	2.3、使用：
+		2.3.1、jsp页面头部引入：<%@ taglib prefix="frameST" uri="/WEB-INF/tlds/frameSecurityTag.tld" %>
+		2.3.2、应用：
+			<frameST:frameSecurity link="abc.do">
+		    	<div>tttttttttttttttttest</div>
+		    </frameST:frameSecurity>
+		    
+3、权限拦截器和登录验证拦截器：
+	3.1、权限拦截器：PermissionInterceptor.java
+	
+	3.2、登录验证拦截器：LoginInterceptor.java
+		
+4、添加工作流引擎（activiti-5.22）:
+	4.1、引入jar包：${Activiti_HOME}/install/activiti-5.22/libs（activiti相关包）
+		activiti-bpmn-converter-5.22.0.jar
+		activiti-bpmn-layout-5.22.0.jar
+		activiti-bpmn-model-5.22.0.jar
+		activiti-camel-5.22.0.jar
+		activiti-cdi.jar
+		activiti-common-rest-5.22.0.jar
+		activiti-crystalball-5.22.0.jar
+		activiti-cxf-5.22.0.jar
+		activiti-diagram-rest-5.22.0.jar
+		activiti-engine-5.22.0.jar
+		activiti-explorer-5.22.0.jar
+		activiti-jmx-5.22.0.jar
+		activiti-json-converter-5.22.0.jar
+		activiti-ldap-5.22.0.jar
+		activiti-modeler-5.22.0.jar
+		activiti-mule-5.22.0.jar
+		activiti-osgi-5.22.0.jar
+		activiti-process-validation-5.22.0.jar
+		activiti-rest-5.22.0.jar
+		activiti-simple-workflow-5.22.0.jar
+		activiti-spring-5.22.0.jar
+		activiti-image-generator-5.22.0.jar
+		
+		joda-time-2.6.jar
+		slf4j-api-1.7.6.jar
+		slf4j-log4j12-1.7.6.jar
+		commons-lang3-3.3.2.jar
+		
+	4.2、创建activiti表：
+		方式一：使用代码来创建activiti工作流的表     ->  InitDB.java
+		方式二：使用配置文件来创建activiti的表
+			activiti-context.xml并加载该配置即可
+			
+	4.3、开发工作流管理模块：WorkflowController.java		
+	
+
+5、在线流程设计器：activiti5 整合网页设计器
+	5.1、将activiti-explorer.war包下的editor-app文件夹拷贝到自己的项目中的相同位置，
+		这个文件夹放置了在线流程设计器的相关HTML、CSS、JS和图片等资源	 ；
+	5.2、将activiti-explorer.war包下的modeler.html这个文件也拷贝到WebRoot下，
+		这是在线流程设计器的主页	
+	5.3、将activiti-explorer.war包下的\WEB-INF\classes\stencilset.json将这个json文件拷贝到resources文件夹下，
+		其定义了bpmn的相关构成组件的信息	
+	5.4、editor-app文件夹下的app-cfg.js中全局访问路径/activiti-explorer/service，
+		 将activiti-explorer改成自己的项目名service路径会在web.xml中配置：
+		 ACTIVITI.CONFIG = {
+			'contextRoot' : '/activiti-explorer/service',
+		};
+		改为自己项目的路径：
+		ACTIVITI.CONFIG = {
+			'contextRoot' : '/asme/activitiModelerService',
+		};
+	5.5、activiti-modeler.jar包中，其采用的是spring-mvc的形式。所以在pom.xml中添加相关依赖：
+		<dependency>
+		    <groupId>org.activiti</groupId>
+		    <artifactId>activiti-modeler</artifactId>
+		    <version>5.21.0</version>
+		</dependency>
+	　　查看activiti-modeler源码，发现里面十分简单，一共只有三个类，对应着三个URL，分别是：
+		　　/editor/stencilset 用来加载并返回stencilset.json文件的内容
+		　　/model/{modelId}/json 这个就是访问的那个url了，通过部署的modelId模型编辑源
+		　　/model/{modelId}/save 这个是用来保存编辑的模型
+	　　知道这些之后，我们再在resources文件夹下创建一个spring-mvc-modeler.xml用于提供对Activiti Modeler后台URL的支持。
+	5.6、在web.xml中配置路径分发：
+		<servlet>
+		    <servlet-name>activitiModelerServlet</servlet-name>
+		    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		    <init-param>
+		        <param-name>contextConfigLocation</param-name>
+		        <param-value>classpath:spring-mvc-modeler.xml</param-value>
+		    </init-param>
+		    <load-on-startup>1</load-on-startup>
+		</servlet>
+		<servlet-mapping>
+		    <servlet-name>activitiModelerServlet</servlet-name>
+		    <!-- url要与app-cfg.js中配置的一致 -->
+		    <url-pattern>/activitiModelerService/*</url-pattern>
+		</servlet-mapping>
+	5.7、启动项目，访问：http://localhost:8081/asme/modeler.html
+		此时页面为空，查看日志发现：http://localhost:8081/asme/activitiModelerService/model//json       404 (Not Found)	
+	  
+	  	查看源码发现首先要创建一个model才会拿着创建的modelId，跳转到这个界面，不然返回数据为空，是无法接下去渲染的
+		即访问路径：http://localhost:8081/asme/modeler.html?modelId=xxx
+		这个modelId必须事先创建好。
+		所以一般是在创建模型之后，后台重定向到这个地址，顺便带上创建的Id	
+		
+	5.8、开发模型管理：WorkflowModelController
+	
+	5.9、汉化：
+		5.9.1、将stencilset.json文件汉化；	
+		5.9.2、将editor-app/i18n/en.json文件汉化，改名zh_CN.json，放在en.json同目录。
+		5.9.3、在editor-app/app.js中第51行找到:
+			 //$translateProvider.preferredLanguage('en');
+        	$translateProvider.preferredLanguage('zh_CN');	
+	5.10、引入jar：
+		batik-transcoder-1.7.jar
+		batik-anim-1.7.jar
+		batik-awt-util-1.7.jar
+		batik-bridge-1.7.jar
+		batik-codec-1.7.jar
+		batik-css-1.7.jar
+		batik-dom-1.7.jar
+		batik-ext-1.7.jar
+		batik-gvt-1.7.jar
+		batik-js-1.7.jar
+		batik-parser-1.7.jar
+		batik-script-1.7.jar
+		batik-svg-dom-1.7.jar
+		batik-svggen-1.7.jar
+		batik-util-1.7.jar
+		batik-xml-1.7.jar
+		xml-apis-1.3.04.jar
+		xml-apis-ext-1.3.04.jar
+		xmlgraphics-commons-1.2.jar
+		javaGeom-0.11.1.jar
+	
+	5.11、解决Activiti Modeler 部署中文流程 报错问题：
+		重写org.activiti.editor.rest.model.ModelSaveRestResource.java
+		重写org.activiti.engine.impl.RepositoryServiceImpl:getModelEditorSource方法
+		重写org.activiti.editor.ui.EditorProcessDefinitionDetailPaneld:deployModelerModel方法
+		
+		引入jar：
+			jackson-core-asl-1.9.13.jar
+			jackson-mapper-asl-1.9.13.jar
+			org.restlet-2.3.7.jar
+			org.restlet.ext.jackson-2.3.7.jar
+			vaadin-6.8.1.jar
+			
+	5.12、将Activiti Modeler 编辑页面整合到easyui的主页面Tab中：
+		/**
+		 * 设计流程图
+		 */
+		function processDefinitionFun(id){  
+			if (id == undefined) {//点击右键菜单才会触发这个
+		        var rows = dataGrid.datagrid('getSelections');
+		        id = rows[0].id;
+		    } else {//点击操作里面的删除图标会触发这个
+		        dataGrid.datagrid('unselectAll').datagrid('uncheckAll');
+		    }
+			var url = "${pageContext.request.contextPath}/modeler.html?modelId="+id+"&R="+new Date();
+		    //window.open(url);  
+		    
+		    parent.addTab({
+		        title : '流程设计-'+id,
+		        url : url,
+		        iconCls : ''
+		    });
+		}  
+	
+	5.13、解决Activiti Modeler 编辑完成后，关闭页面的路径问题：
+		改造关闭方法：editor-app/configuration/toolbar-default-actions.js当中
+		$scope.saveAndClose = function () {
+	    	$scope.save(function() {
+	    		//改为自己的项目路径
+	    		window.location.href = "./workflowModel/editModelClosePage.do?modelId="+modelMetaData.modelId;
+	    	});
+	    };
+		
+		
+6、在线表单设计器：
+
+	
+----------------【遗留BUG】----------------------------------------------								
+1、spring aop的@Aspect注解的类，并不生效:
+	--> aop的扫描和启用配置必须放到spring-mvc.xml中。
+

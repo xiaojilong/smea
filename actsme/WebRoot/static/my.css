@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+*{font-size:12px;}
+
+body {font-family:helvetica,tahoma,verdana,sans-serif;padding:20px;margin:0;}
+
+table {border-collapse:collapse; border:0px;padding-top: 0px;}
+table th,table td {padding:2px 2px;height:25px;}
+
+.th{text-align:right;width:20%;}
+.light-info{background:#FFFEE6;color:#8F5700;padding:12px;}

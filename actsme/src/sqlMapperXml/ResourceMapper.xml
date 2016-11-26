@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xiaojl.core.dao.ResourceDao">
+
+   <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, name, url, description, icon, pid, seq, status, resource_type AS resourceType, create_time AS createTime
+    </sql>
+
+    <select id="selectResourcesByTypeAndPid" resultType="org.xiaojl.core.model.Resource">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from resource
+    	where resource_type=#{resourceType} 
+    	<if test="pId != null and pId != ''">
+    		and pid=#{pId}
+    	</if>
+    	<if test="pId == null or pId == ''">
+    		and pid is null
+    	</if>
+    	order by seq
+    </select>
+    
+    <select id="selectResourcesByRoleIdAndType"  resultType="org.xiaojl.core.model.Resource">
+    	select 
+    		s.id, s.name, s.url, s.description, s.icon, s.pid, s.seq, s.status, s.resource_type AS resourceType, s.create_time AS createTime
+    	from resource s
+    	LEFT JOIN role_resource e ON s.id = e.resource_id
+		LEFT JOIN role rl ON e.role_id = rl.id
+		where rl.id=#{roleId}  and s.resource_type = #{resourceType}
+    </select>
+	
+	<select id="selectAllResource" resultType="org.xiaojl.core.model.Resource">
+		select 
+    	<include refid="Base_Column_List" />
+    	from resource  order by seq
+	</select>
+	
+	<select id="selectByPid" resultType="org.xiaojl.core.model.Resource">
+		select 
+    	<include refid="Base_Column_List" />
+    	from resource 
+    	where pid=#{pid}
+	</select>
+	
+</mapper>

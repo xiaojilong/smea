@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xiaojl.core.dao.RoleResourceDao">
+	<!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, role_id as roleId, resource_id as resourceId
+    </sql>
+    
+	<select id="selectResourceIdListByRoleId" resultType="java.lang.Long">
+        select
+        	resource_id as resourceId
+        from role_resource
+        where role_id=#{roleId}
+    </select>
+    
+    <select id="selectByResourceId" resultType="org.xiaojl.core.model.RoleResource">
+    	select
+        	<include refid="Base_Column_List" />
+        from role_resource
+        where resource_id=#{resourceId}
+    </select>
+    
+    <delete id="deleteRoleResouceByResourceId" parameterType="java.lang.Long">
+    	delete from role_resource
+        where resource_id=#{resourceId}
+    </delete>
+    
+</mapper>

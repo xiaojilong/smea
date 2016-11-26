@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xiaojl.workflow.dao.ProcessTypeDao">
+	<!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, name, code
+    </sql>
+    
+	<select id="selectProcessTypeList" resultType="org.xiaojl.workflow.model.ProcessType">
+        select
+        <include refid="Base_Column_List"/>
+        from process_type
+        order by ${sort} ${order}
+    </select>
+    
+    <select id="selectComboboxData" resultType="org.xiaojl.workflow.model.ProcessType">
+    	select <include refid="Base_Column_List"/>
+        from process_type
+        order by id asc
+    </select>
+</mapper>
